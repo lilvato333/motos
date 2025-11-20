@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pepemoto - Motos y Motores</title>
+
+<style>
+    /* ======== ESTILOS GENERALES ======== */
+    body {
+        margin: 0;
+        background: #0a0a0a;
+        color: #fff;
+        font-family: "Poppins", sans-serif;
+        overflow-x: hidden;
+    }
+
+    header {
+        background: linear-gradient(90deg, #c00, #600);
+        text-align: center;
+        padding: 30px 10px;
+        box-shadow: 0 0 20px rgba(255,0,0,0.3);
+    }
+
+    header h1 {
+        margin: 0;
+        font-size: 2.5em;
+    }
+
+    nav {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        background: #111;
+        padding: 10px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    nav button {
+        background: none;
+        border: none;
+        color: #fff;
+        font-weight: bold;
+        margin: 8px 15px;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+
+    nav button:hover {
+        background: #c00;
+        color: #fff;
+    }
+
+    section {
+        display: none;
+        padding: 50px 20px;
+        text-align: center;
+        animation: fadeIn 0.5s ease;
+    }
+
+    section.active { display: block; }
+
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(30px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+
+    h2 {
+        color: #c00;
+        margin-bottom: 10px;
+    }
+
+    .grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 25px;
+        margin-top: 30px;
+    }
+
+    .item {
+        background: #151515;
+        border: 1px solid #c00;
+        border-radius: 10px;
+        padding: 15px;
+        width: 300px;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px #c00;
+    }
+
+    .item img {
+        width: 100%;
+        border-radius: 8px;
+        height: 180px;
+        object-fit: cover;
+    }
+
+    .detalle {
+        margin-top: 30px;
+        background: #111;
+        border: 1px solid #c00;
+        border-radius: 10px;
+        padding: 20px;
+        display: inline-block;
+        text-align: left;
+        max-width: 600px;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: none;
+    }
+
+    button.enviar {
+        background: #c00;
+        color: #fff;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 5px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button.enviar:hover {
+        background: #900;
+    }
+
+    footer {
+        background: #111;
+        color: #aaa;
+        text-align: center;
+        padding: 20px;
+        border-top: 1px solid #c00;
+    }
+
+    footer a {
+        color: #c00;
+        text-decoration: none;
+    }
+
+    footer a:hover {
+        text-decoration: underline;
+    }
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🏍️ Pepemoto</h1>
+    <p>Tu tienda moderna de motos, motores y refacciones</p>
+</header>
+
+<nav>
+    <button onclick="mostrar('inicio')">Inicio</button>
+    <button onclick="mostrar('cotizaciones')">Cotizaciones</button>
+    <button onclick="mostrar('soluciones')">Soluciones</button>
+    <button onclick="mostrar('motores')">Motores</button>
+    <button onclick="mostrar('motocicletas')">Motocicletas</button>
+    <button onclick="mostrar('refacciones')">Refacciones</button>
+</nav>
+
+<!-- INICIO -->
+<section id="inicio" class="active">
+    <h2>Bienvenido a Pepemoto</h2>
+    <p>En Pepemoto ofrecemos motos, motores, refacciones y soluciones para todo tipo de vehículos. Nos especializamos en marcas reconocidas como Italika, Kawasaki, Suzuki y Honda.</p>
+    <p>📍 Dirección: Av. Velocidad #123, Ciudad Motor, México.<br>☎️ Teléfono: (55) 9999-9999</p>
+</section>
+
+<!-- COTIZACIONES -->
+<section id="cotizaciones">
+    <h2>Solicita tu cotización</h2>
+    <form id="formCotizacion" class="detalle" onsubmit="enviarCotizacion(event)">
+        <label>Nombre completo:</label>
+        <input type="text" id="nombre" required>
+
+        <label>Correo electrónico:</label>
+        <input type="email" id="email" required>
+
+        <label>Tipo de producto:</label>
+        <select id="tipoProducto" required onchange="mostrarOpcionesProducto()">
+            <option value="">Selecciona una opción</option>
+            <option value="moto">Motocicleta</option>
+            <option value="motor">Motor</option>
+            <option value="refaccion">Refacción</option>
+        </select>
+
+        <div id="opcionesProducto"></div>
+
+        <button type="submit" class="enviar">Enviar cotización</button>
+    </form>
+    <p id="mensajeEnviado" style="color:#0f0; margin-top:15px;"></p>
+</section>
+
+<!-- SOLUCIONES -->
+<section id="soluciones">
+    <h2>Soluciones para tu vehículo</h2>
+    <p>Selecciona un problema común:</p>
+    <div class="grid">
+        <div class="item" onclick="mostrarSolucion('bateria')"><h3>Problemas de batería</h3></div>
+        <div class="item" onclick="mostrarSolucion('aceite')"><h3>Fuga de aceite</h3></div>
+        <div class="item" onclick="mostrarSolucion('frenos')"><h3>Frenos débiles</h3></div>
+    </div>
+    <div id="detalleSolucion" class="detalle"></div>
+</section>
+
+<!-- MOTORES -->
+<section id="motores">
+    <h2>Motores</h2>
+    <p>Elige el tipo de motor:</p>
+    <div class="grid">
+        <div class="item" onclick="mostrarMotores('nuevo')"><h3>Nuevo</h3></div>
+        <div class="item" onclick="mostrarMotores('seminuevo')"><h3>Seminuevo</h3></div>
+        <div class="item" onclick="mostrarMotores('remanufacturado')"><h3>Remanufacturado</h3></div>
+    </div>
+    <div id="detalleMotor" class="detalle"></div>
+</section>
+
+<!-- MOTOCICLETAS -->
+<section id="motocicletas">
+    <h2>Motocicletas por Marca</h2>
+    <p>Selecciona una marca:</p>
+    <div class="grid">
+        <div class="item" onclick="mostrarMarca('italika')"><img src="https://cdn.pixabay.com/photo/2017/08/06/00/57/motorcycle-2587223_1280.jpg"><h3>Italika</h3></div>
+        <div class="item" onclick="mostrarMarca('kawasaki')"><img src="https://cdn.pixabay.com/photo/2017/04/05/22/06/motorcycle-2201947_1280.jpg"><h3>Kawasaki</h3></div>
+        <div class="item" onclick="mostrarMarca('suzuki')"><img src="https://cdn.pixabay.com/photo/2017/04/07/09/10/motorcycle-2210428_1280.jpg"><h3>Suzuki</h3></div>
+        <div class="item" onclick="mostrarMarca('honda')"><img src="https://cdn.pixabay.com/photo/2016/11/19/12/55/motorbike-1836955_1280.jpg"><h3>Honda</h3></div>
+    </div>
+    <div id="detalleMarca" class="detalle"></div>
+</section>
+
+<!-- REFACCIONES -->
+<section id="refacciones">
+    <h2>Refacciones</h2>
+    <p>Selecciona una categoría:</p>
+    <div class="grid">
+        <div class="item" onclick="mostrarRefaccion('frenos')"><h3>Frenos</h3></div>
+        <div class="item" onclick="mostrarRefaccion('llantas')"><h3>Llantas</h3></div>
+        <div class="item" onclick="mostrarRefaccion('aceites')"><h3>Aceites y Filtros</h3></div>
+    </div>
+    <div id="detalleRefaccion" class="detalle"></div>
+</section>
+
+<footer>
+    <p>© 2025 Pepemoto | Síguenos en 
+        <a href="#">Facebook</a> • 
+        <a href="#">Instagram</a> • 
+        <a href="#">YouTube</a>
+    </p>
+</footer>
+
+<script>
+    // Mostrar secciones
+    function mostrar(seccion) {
+        document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+        document.getElementById(seccion).classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // Mostrar opciones dinámicas en el formulario
+    function mostrarOpcionesProducto() {
+        const tipo = document.getElementById("tipoProducto").value;
+        const cont = document.getElementById("opcionesProducto");
+        let html = "";
+        if (tipo === "moto") {
+            html = `
+                <label>Selecciona tipo de motocicleta:</label>
+                <select required>
+                    <option>Deportiva</option>
+                    <option>Motoneta</option>
+                    <option>Doble propósito</option>
+                </select>`;
+        } else if (tipo === "motor") {
+            html = `
+                <label>Tipo de motor:</label>
+                <select required>
+                    <option>Nuevo</option>
+                    <option>Seminuevo</option>
+                    <option>Remanufacturado</option>
+                </select>`;
+        } else if (tipo === "refaccion") {
+            html = `
+                <label>Categoría de refacción:</label>
+                <select required>
+                    <option>Frenos</option>
+                    <option>Llantas</option>
+                    <option>Aceites y filtros</option>
+                </select>`;
+        }
+        cont.innerHTML = html;
+    }
+
+    // Simular envío del formulario
+    function enviarCotizacion(e) {
+        e.preventDefault();
+        document.getElementById("mensajeEnviado").textContent = "✅ ¡Cotización enviada con éxito! Nos pondremos en contacto pronto.";
+        e.target.reset();
+        document.getElementById("opcionesProducto").innerHTML = "";
+    }
+
+    // Soluciones
+    function mostrarSolucion(tipo) {
+        const detalle = document.getElementById("detalleSolucion");
+        const soluciones = {
+            bateria: "Reemplazamos batería, revisamos sistema de carga y alternador.",
+            aceite: "Sellamos fugas y cambiamos juntas y empaques defectuosos.",
+            frenos: "Cambio de pastillas y purgado completo del sistema."
+        };
+        detalle.innerHTML = `<h3>Solución:</h3><p>${soluciones[tipo]}</p>`;
+    }
+
+    // Motores
+    function mostrarMotores(tipo) {
+        const detalle = document.getElementById("detalleMotor");
+        const motores = {
+            nuevo: { precio: "$12,000", desc: "Garantía completa y alto rendimiento.", img: "https://cdn.pixabay.com/photo/2017/09/04/19/53/motor-2716234_1280.jpg" },
+            seminuevo: { precio: "$8,000", desc: "Probado, certificado y en excelente estado.", img: "https://cdn.pixabay.com/photo/2016/03/27/21/16/motorcycle-1283402_1280.jpg" },
+            remanufacturado: { precio: "$6,000", desc: "Reacondicionado profesionalmente, como nuevo.", img: "https://cdn.pixabay.com/photo/2017/09/04/19/53/motor-2716234_1280.jpg" }
+        };
+        let m = motores[tipo];
+        detalle.innerHTML = `<img src="${m.img}" width="100%"><h3>Motor ${tipo}</h3><p>${m.desc}</p><strong>Precio: ${m.precio}</strong>`;
+    }
+
+    // Refacciones
+    function mostrarRefaccion(tipo) {
+        const detalle = document.getElementById("detalleRefaccion");
+        const ref = {
+            frenos: "Discos ventilados, pastillas de alto rendimiento, líquido DOT4. Precio desde $800.",
+            llantas: "Marcas premium (Michelin, Pirelli). Precio desde $1200.",
+            aceites: "Aceites sintéticos y filtros OEM. Precio desde $450."
+        };
+        detalle.innerHTML = `<h3>${tipo.charAt(0).toUpperCase() + tipo.slice(1)}</h3><p>${ref[tipo]}</p>`;
+    }
+
+    // Motocicletas
+    function mostrarMarca(marca) {
+        const detalle = document.getElementById("detalleMarca");
+        const marcas = {
+            italika: {
+                modelos: [
+                    { nombre: "Deportiva 250Z", precio: "$39,999", especificaciones: "Motor 250cc, 5 velocidades, frenos de disco, 28 HP." },
+                    { nombre: "Motoneta Vitalia 150", precio: "$28,499", especificaciones: "Motor 150cc, transmisión automática, estilo clásico." },
+                    { nombre: "Doble Propósito DM200", precio: "$45,999", especificaciones: "Motor 200cc, suspensión alta, ideal para caminos mixtos." }
+                ]
+            },
+            kawasaki: {
+                modelos: [
+                    { nombre: "Ninja 400", precio: "$164,999", especificaciones: "Motor 399cc, 47 HP, 6 velocidades, frenos ABS." },
+                    { nombre: "Versys 650", precio: "$189,999", especificaciones: "Motor bicilíndrico 649cc, 68 HP, viaje cómodo y largo alcance." }
+                ]
+            },
+            suzuki: {
+                modelos: [
+                    { nombre: "GSX-S750", precio: "$198,999", especificaciones: "Motor 749cc, 4 cilindros, 114 HP, estilo naked sport." },
+                    { nombre: "V-Strom 250", precio: "$124,999", especificaciones: "Motor 248cc, doble propósito, tanque de 17L." }
+                ]
+            },
+            honda: {
+                modelos: [
+                    { nombre: "CBR500R", precio: "$184,999", especificaciones: "Motor bicilíndrico 471cc, 47 HP, carenado deportivo." },
+                    { nombre: "XR150L", precio: "$72,999", especificaciones: "Motor 150cc, doble propósito, ligera y eficiente." }
+                ]
+            }
+        };
+        const data = marcas[marca];
+        let html = `<h3>${marca.toUpperCase()}</h3>`;
+        data.modelos.forEach(m => {
+            html += `<div style="margin-bottom:15px;"><strong>${m.nombre}</strong><br>${m.especificaciones}<br><strong>Precio: ${m.precio}</strong></div>`;
+        });
+        detalle.innerHTML = html;
+    }
+</script>
+</body>
+</html>
